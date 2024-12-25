@@ -1,0 +1,100 @@
+/* Footer.module.css */
+.footer {
+    background-color: #171923;
+    color: white;
+    padding: 64px 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  
+  .logoSection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .logo {
+    margin-bottom: 16px;
+    height: 40px;
+    width: 140px;
+  }
+  
+  .madeWith {
+    color: #9CA3AF;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .madeWith a {
+    color: #9CA3AF;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .madeWith a:hover {
+    color: #60A5FA;
+  }
+  
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .sectionTitle {
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: white;
+  }
+  
+  .linkList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .link {
+    color: #9CA3AF;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .link:hover {
+    color: white;
+  }
+  
+  .externalIcon {
+    width: 14px;
+    height: 14px;
+    margin-left: 4px;
+  }
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }

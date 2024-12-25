@@ -1,0 +1,176 @@
+
+.container {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+}
+
+.triangle {
+    position: absolute;
+    left: 80px;
+    top: 25%;
+    width: 236px;
+    z-index: 1;
+    height: 237px;
+}
+
+.semicircleRight {
+    position: absolute;
+    right: 0;
+    top: 136px;
+    width: 78px;
+    z-index: 1;
+}
+
+.semicircleBottom {
+    position: absolute;
+    bottom: 0;
+    left: 72%;
+    width: 197px;
+    z-index: 1;
+}
+
+.formContainer {
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 324px;
+    position: relative;
+    z-index: 2;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+    color: white;
+    font-size: 14px;
+    text-align: left;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #4a4a4a;
+    color: white;
+    font-size: 14px;
+    background-color: #1a1a1a;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.inputGroup input::placeholder {
+  color: #6b7280;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 14px;
+  text-align: center;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 8px;
+  background-color: #1a5fff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  box-shadow: 0px 4px 4px 0px #E9444B40;
+
+}
+
+.submitButton:hover {
+  background-color: #2563eb;
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  
+}
+
+
+
+.divider span {
+ 
+  color: #9ca3af;
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+.googleButton {
+  width: 100%;
+  padding: 8px;
+  background-color: #1a5fff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+  box-shadow: 0px 4px 4px 0px #E9444B40;
+
+}
+
+
+
+.googleButton img {
+  width: 20px;
+  height: 20px;
+}
+
+.toggleText {
+  text-align: center;
+  color: white;
+  font-size: 14px;
+}
+
+.toggleButton {
+  color: #3b82f6;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toggleButton:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .triangle,
+  .semicircleRight,
+  .semicircleBottom {
+    width: 100px;
+  }
+
+  .formContainer {
+    padding: 24px;
+  }
+}

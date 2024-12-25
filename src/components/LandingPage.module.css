@@ -1,0 +1,25 @@
+/* LandingPage.module.css */
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #171923;
+  }
+  
+  .main {
+    flex: 1;
+  }
+  
+  .heroSection {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 16px;
+    
+  }
+  
+  .heroImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
