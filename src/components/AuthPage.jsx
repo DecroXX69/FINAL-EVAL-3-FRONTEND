@@ -1,5 +1,5 @@
-// Frontend: src/components/AuthPage.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { login, signup } from '../services/api';
 import styles from './AuthPage.module.css';
 import triangleImg from '../assets/Triangle.png';
@@ -15,6 +15,7 @@ const AuthPage = () => {
     confirmPassword: ''
   });
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,9 +28,25 @@ const AuthPage = () => {
     try {
       if (isLogin) {
         const data = await login({ email: formData.email, password: formData.password });
+        
         localStorage.setItem('token', data.token);
+        localStorage.setItem('workspaceId', data.workspaceId);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('UserId', data.userId);
         console.log("Login successful");
-        // Handle successful login (e.g., redirect)
+        const pendingShare = localStorage.getItem('pendingShare');
+        const originalShareUrl = localStorage.getItem('originalShareUrl');
+       
+        if (pendingShare && originalShareUrl) {
+          // Clear the pending share data
+          
+          // Redirect back to the original share URL
+          window.location.href = originalShareUrl;
+        } else {
+          // Normal login flow
+          navigate('/workspace');
+       
+        } // Redirect to Workspace
       } else {
         if (formData.password !== formData.confirmPassword) {
           setError('Passwords do not match');
@@ -41,7 +58,11 @@ const AuthPage = () => {
           password: formData.password
         });
         localStorage.setItem('token', data.token);
-        // Handle successful signup (e.g., redirect)
+        localStorage.setItem('workspaceId', data.workspaceId);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('UserId', data._id);
+        console.log("Signup successful");
+        navigate('/workspace'); // Redirect to Workspace
       }
     } catch (err) {
       setError(err.message || 'An error occurred');
@@ -53,7 +74,7 @@ const AuthPage = () => {
       <img src={triangleImg} alt="Triangle" className={styles.triangle} />
       <img src={semicircleRight} alt="Semicircle" className={styles.semicircleRight} />
       <img src={semicircleBottom} alt="Semicircle" className={styles.semicircleBottom} />
-      
+
       <div className={styles.formContainer}>
         <form onSubmit={handleSubmit} className={styles.form}>
           {!isLogin && (
@@ -68,7 +89,7 @@ const AuthPage = () => {
               />
             </div>
           )}
-          
+
           <div className={styles.inputGroup}>
             <label>Email</label>
             <input
@@ -79,7 +100,7 @@ const AuthPage = () => {
               placeholder="Enter your email"
             />
           </div>
-          
+
           <div className={styles.inputGroup}>
             <label>Password</label>
             <input
@@ -90,7 +111,7 @@ const AuthPage = () => {
               placeholder="••••••••••"
             />
           </div>
-          
+
           {!isLogin && (
             <div className={styles.inputGroup}>
               <label>Confirm Password</label>
@@ -103,22 +124,22 @@ const AuthPage = () => {
               />
             </div>
           )}
-          
+
           {error && <p className={styles.error}>{error}</p>}
-          
+
           <button type="submit" className={styles.submitButton}>
             {isLogin ? 'Log In' : 'Sign Up'}
           </button>
-          
+
           <div className={styles.divider}>
             <span>OR</span>
           </div>
-          
+
           <button type="button" className={styles.googleButton}>
             <img src="https://www.google.com/favicon.ico" alt="Google" />
             Sign {isLogin ? 'in' : 'up'} with Google
           </button>
-          
+
           <p className={styles.toggleText}>
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button
