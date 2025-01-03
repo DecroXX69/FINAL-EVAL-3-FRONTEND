@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-const API_URL = 'https://final-eval-3-backend.onrender.com';
+const API_URL = 'https://final-eval-3-backend.onrender.com/api';
 
 // Signup
 export const signup = async (userData) => {
