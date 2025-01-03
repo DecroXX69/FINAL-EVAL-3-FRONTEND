@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://final-eval-3-backend.onrender.com';
 
 // Signup
 export const signup = async (userData) => {
