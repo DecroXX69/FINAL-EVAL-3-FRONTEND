@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { login, signup } from '../services/api';
 import styles from './AuthPage.module.css';
 import triangleImg from '../assets/Triangle.png';
@@ -15,7 +15,7 @@ const AuthPage = () => {
     confirmPassword: ''
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,15 +33,20 @@ const AuthPage = () => {
         localStorage.setItem('workspaceId', data.workspaceId);
         localStorage.setItem('username', data.username);
         localStorage.setItem('UserId', data.userId);
-        
+        console.log("Login successful");
         const pendingShare = localStorage.getItem('pendingShare');
         const originalShareUrl = localStorage.getItem('originalShareUrl');
        
         if (pendingShare && originalShareUrl) {
+          // Clear the pending share data
+          
+          // Redirect back to the original share URL
           window.location.href = originalShareUrl;
         } else {
+          // Normal login flow
           navigate('/workspace');
-        }
+       
+        } // Redirect to Workspace
       } else {
         if (formData.password !== formData.confirmPassword) {
           setError('Passwords do not match');
@@ -52,15 +57,12 @@ const AuthPage = () => {
           email: formData.email,
           password: formData.password
         });
-
-        // Store user data consistently with login flow
         localStorage.setItem('token', data.token);
         localStorage.setItem('workspaceId', data.workspaceId);
         localStorage.setItem('username', data.username);
-        localStorage.setItem('UserId', data.userId || data._id); // Try userId first, fallback to _id
-        
-        // Force a page reload after signup to ensure workspace state is fresh
-        window.location.href = '/workspace';
+        localStorage.setItem('UserId', data._id);
+        console.log("Signup successful");
+        navigate('/workspace'); // Redirect to Workspace
       }
     } catch (err) {
       setError(err.message || 'An error occurred');
