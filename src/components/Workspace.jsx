@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, X, ChevronDown, ChevronUp,Copy, Check } from 'lucide-react';
-import styles from './workspace.module.css';
+import styles from './Workspace.module.css';
 import { getWorkspace, getUserWorkspaces, addFolder, deleteFolder, addFormbotToFolder, addFormbot, deleteFormbot, shareWorkspace,addSharedWorkspace} from '../services/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import  Settings  from './Settings';
+import Folder from '../assets/Folder.png';
+import Delete from '../assets/Delete.png';
+import close from '../assets/close.png';
+
 const Modal = ({ title, value, onChange, onClose, onSubmit, placeholder }) => (
   <div className={styles.modalOverlay}>
     <div className={styles.modal}>
@@ -16,43 +20,49 @@ const Modal = ({ title, value, onChange, onClose, onSubmit, placeholder }) => (
         className={styles.modalInput}
       />
       <div className={styles.modalActions}>
+      <button onClick={onSubmit} className={styles.submitButton}>Done</button>
+        
+        <span></span>
         <button onClick={onClose} className={styles.cancelButton}>Cancel</button>
-        <button onClick={onSubmit} className={styles.submitButton}>Done</button>
       </div>
     </div>
   </div>
 );
-const FormbotGrid = ({ forms, onDelete, onCreate, navigate }) => (
+
+const FormbotGrid = ({ forms, onDelete, onCreate, navigate, hasEditPermissions }) => (
   <div className={styles.grid}>
-    <button onClick={onCreate} className={styles.createFormButton}>
-      <Plus size={24} />
-      <span>Create a Formbot</span>
-    </button>
+    {hasEditPermissions && (
+      <button onClick={onCreate} className={styles.createFormButton}>
+        <Plus size={24} />
+        <span>Create a Typebot</span>
+      </button>
+    )}
     {forms.map((form) => (
       <div 
         key={form.id} 
         className={styles.formCard}
         onClick={() => {
+          // Always allow viewing the form
           if (form.id) {
             navigate(`/form-editor/${form.id}`);
-          } else {
-            console.error('Form ID is undefined:', form);
           }
         }}
         style={{ cursor: 'pointer' }}
       >
         <span className={styles.formName}>{form.name}</span>
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            if (form.id) {
-              onDelete(form.id);
-            }
-          }} 
-          className={styles.deleteButton}
-        >
-          <X size={16} />
-        </button>
+        {hasEditPermissions && (
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              if (form.id) {
+                onDelete(form.id);
+              }
+            }} 
+            className={styles.deleteButton}
+          >
+            <img src={Delete} alt="Delete Form" className={styles.deleteIcon} />
+          </button>
+        )}
       </div>
     ))}
   </div>
@@ -60,63 +70,66 @@ const FormbotGrid = ({ forms, onDelete, onCreate, navigate }) => (
 
 
 
-const ShareModal = ({ onClose, onShare, email, setEmail, permissions, setPermissions, workspaceId }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [inviteLink, setInviteLink] = useState('');
-  const [copied, setCopied] = useState(false);
+  const ShareModal = ({ onClose, onShare, email, setEmail, permissions, setPermissions, workspaceId }) => {
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [inviteLink, setInviteLink] = useState('');
+    const [copied, setCopied] = useState(false);
+    
+    useEffect(() => {
+      const workspaceid = localStorage.getItem('workspaceId');
+      // Ensure permissions are lowercase for consistency
+      const permissionsLower = permissions.toLowerCase();
+      const link = `${window.location.origin}/workspace/share/${workspaceid}?permissions=${permissionsLower}`;
+      setInviteLink(link);
+    }, [workspaceId, permissions]); // Add permissions as dependency to update link when permissions change
   
-  useEffect(() => {
-    // Generate a unique invite link
-    const workspaceid=localStorage.getItem('workspaceId');
-    const link = `${window.location.origin}/workspace/share/${workspaceid}`;
-    setInviteLink(link);
-  }, [workspaceId]);
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(inviteLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy:', error);
-    }
-  };
-  
-  return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modal}>
-        <div className={styles.modalHeader}>
-          <h2>Invite by Email</h2>
-          <div className={styles.headerActions}>
-            <div className={styles.dropdownContainer}>
-              <button onClick={() => setShowDropdown(!showDropdown)} className={styles.editButton}>
-                {permissions}
-                <ChevronDown size={16} />
-              </button>
-              {showDropdown && (
-                <div className={styles.dropdownMenu}>
-                  <button onClick={() => { setPermissions('Edit'); setShowDropdown(false); }} className={styles.dropdownItem}>Edit</button>
-                  <button onClick={() => { setPermissions('View'); setShowDropdown(false); }} className={styles.dropdownItem}>View</button>
-                </div>
-              )}
+    const handleCopyLink = async () => {
+      try {
+        await navigator.clipboard.writeText(inviteLink);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (error) {
+        console.error('Failed to copy:', error);
+      }
+    };
+    
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modal}>
+          <div className={styles.modalHeader}>
+            <h2>Invite by Email</h2>
+            <div className={styles.headerActions}>
+              <div className={styles.dropdownContainer}>
+                <button onClick={() => setShowDropdown(!showDropdown)} className={styles.editButton}>
+                  {permissions}
+                  <ChevronDown size={16} />
+                </button>
+                {showDropdown && (
+                  <div className={styles.dropdownMenu}>
+                    <button onClick={() => { setPermissions('Edit'); setShowDropdown(false); }} className={styles.dropdownItem}>Edit</button>
+                    <button onClick={() => { setPermissions('View'); setShowDropdown(false); }} className={styles.dropdownItem}>View</button>
+                  </div>
+                )}
+              </div>
+              <button onClick={onClose} className={styles.closeButton}><img src={close} alt="Close" /></button>
             </div>
-            <button onClick={onClose} className={styles.closeButton}><X size={16} /></button>
           </div>
-        </div>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter email id" className={styles.modalInput} />
-        <button onClick={onShare} className={styles.blueButton}>Send Invite</button>
-        <div className={styles.divider}><h2>Invite by link</h2></div>
-        <div className={styles.linkContainer}>
-          <input type="text" value={inviteLink} readOnly className={styles.linkInput} />
-          <button onClick={handleCopyLink} className={styles.copyButton}>
-            {copied ? <Check size={16} /> : <Copy size={16} />}
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter email id" className={styles.modalInput} />
+          <button onClick={onShare} className={styles.blueButton}>Send Invite</button>
+          <div className={styles.divider}><h2>Invite by link</h2></div>
+          {/* <div className={styles.linkContainer}>
+            <input type="text" value={inviteLink} readOnly className={styles.linkInput} />
+            <button onClick={handleCopyLink} className={styles.copyButton}>
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+            </button>
+          </div> */}
+          <button onClick={handleCopyLink} className={styles.blueButton}>
+            {copied ? 'Link Copied!' : 'Copy Link'}
           </button>
         </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  };
 
 const Workspace = () => {
   const [folders, setFolders] = useState([]);
@@ -138,7 +151,7 @@ const Workspace = () => {
   const [currentWorkspace, setCurrentWorkspace] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [userPermissions, setUserPermissions] = useState('Edit');
   
   const [isInitialized, setIsInitialized] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -171,13 +184,18 @@ useEffect(() => {
       const userId = localStorage.getItem('UserId');
       const sharedWorkspaceId = isShareLink ? pathParts[3] : null;
       
+ // Get permissions from URL if it's a share link
+ const urlParams = new URLSearchParams(window.location.search);
+ const linkPermissions = urlParams.get('permissions');
+
       // Important: Check if this is a share link and we're already processing it
       const isProcessingShare = localStorage.getItem('isProcessingShare');
       
       if (isShareLink && !userId && !isProcessingShare) {
-        // Set flag before redirecting
+        // Store permissions along with other share data
         localStorage.setItem('isProcessingShare', 'true');
         localStorage.setItem('pendingShare', sharedWorkspaceId);
+        localStorage.setItem('pendingSharePermissions', linkPermissions || 'view'); // Default to view if not specified
         localStorage.setItem('originalShareUrl', window.location.href);
         window.location.href = '/auth';
         return;
@@ -186,13 +204,15 @@ useEffect(() => {
       // If we have userId and there's a pending share, process it
       if (userId && localStorage.getItem('pendingShare')) {
         const pendingShareId = localStorage.getItem('pendingShare');
+        const pendingPermissions = localStorage.getItem('pendingSharePermissions') || 'view';
         const userid = localStorage.getItem('UserId');
         try {
           console.log("Calling addSharedWorkspace with ID:", pendingShareId);
-          await addSharedWorkspace(pendingShareId,userid);
+          await addSharedWorkspace(pendingShareId, userid, pendingPermissions);
           
           // Clear all share-related data after processing
           localStorage.removeItem('pendingShare');
+          localStorage.removeItem('pendingSharePermissions');
           localStorage.removeItem('originalShareUrl');
           localStorage.removeItem('isProcessingShare');
           
@@ -218,6 +238,7 @@ useEffect(() => {
           setError('Error accessing shared workspace. Please check the link and try again.');
           // Clear share data on error
           localStorage.removeItem('pendingShare');
+          localStorage.removeItem('pendingSharePermissions');
           localStorage.removeItem('originalShareUrl');
           localStorage.removeItem('isProcessingShare');
         }
@@ -336,6 +357,25 @@ useEffect(() => {
     }
   }, [workspaceId]);
 
+
+  useEffect(() => {
+    if (currentWorkspace) {
+      const userId = localStorage.getItem('UserId');
+      
+      if (currentWorkspace.owner._id === userId) {
+        setUserPermissions('Edit');
+      } else {
+        const userShare = currentWorkspace.sharedWith?.find(
+          share => share.userId._id === userId
+        );
+        setUserPermissions(userShare?.permissions || 'View');
+      }
+    }
+  }, [currentWorkspace]);
+
+
+
+  
   const switchWorkspace = (workspace) => {
     setCurrentWorkspace(workspace);
     setWorkspaceId(workspace._id);
@@ -367,6 +407,25 @@ useEffect(() => {
     }
   };
 
+  const hasEditPermissions = () => {
+    const userId = localStorage.getItem('UserId');
+    
+    // If user is the workspace owner, they have edit permissions
+    if (currentWorkspace?.owner._id === userId) {
+      return true;
+    }
+    
+    // Check shared permissions
+    const userShare = currentWorkspace?.sharedWith?.find(
+      share => share.userId._id === userId
+    );
+    
+    // Explicitly check for 'edit' permission (case insensitive)
+    return userShare?.permissions?.toLowerCase() === 'edit';
+  };
+
+
+  
   const handleCreateForm = async () => {
     if (newFormName.trim() && workspaceId) {
       try {
@@ -493,10 +552,15 @@ useEffect(() => {
 
       <main className={styles.main}>
         <section className={styles.folderSection}>
-          <button onClick={() => setShowNewFolderModal(true)} className={styles.createFolderButton}>
-            <Plus size={20} />
-            <span>Create a Folder</span>
-          </button>
+          {hasEditPermissions() && (
+            <button 
+              onClick={() => setShowNewFolderModal(true)} 
+              className={styles.createFolderButton}
+            >
+              <img src={Folder} alt="Create Folder" className={styles.folderIcon} />
+              <span>Create a Folder</span>
+            </button>
+          )}
 
           {folders.map(folder => (
             <div
@@ -505,37 +569,42 @@ useEffect(() => {
               onClick={() => setSelectedFolder(folder.id)}
             >
               <span className={styles.folderName}>{folder.name}</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteFolder(workspaceId, folder.id);
-                  setFolders(prev => prev.filter(f => f.id !== folder.id));
-                }}
-                className={styles.deleteButton}
-              >
-                <X size={16} />
-              </button>
+              {hasEditPermissions() && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteFolder(workspaceId, folder.id);
+                    setFolders(prev => prev.filter(f => f.id !== folder.id));
+                  }}
+                  className={styles.deleteButton}
+                >
+                  <img src={Delete} alt="Delete Folder" className={styles.deleteIcon} />
+                </button>
+              )}
             </div>
           ))}
         </section>
 
         <FormbotGrid
-          forms={selectedFolder ? folders.find(f => f.id === selectedFolder)?.forms || [] : forms}
-          onDelete={async (formId) => {
-            await deleteFormbot(workspaceId, formId);
-            if (selectedFolder) {
-              setFolders(prev => prev.map(folder =>
-                folder.id === selectedFolder
-                  ? { ...folder, forms: folder.forms.filter(form => form.id !== formId) }
-                  : folder
-              ));
-            } else {
-              setForms(prev => prev.filter(form => form.id !== formId));
-            }
-          }}
-          onCreate={() => setShowNewFormModal(true)}
-          navigate={navigate} 
-        />
+  forms={selectedFolder ? folders.find(f => f.id === selectedFolder)?.forms || [] : forms}
+  onDelete={async (formId) => {
+    if (hasEditPermissions()) {
+      await deleteFormbot(workspaceId, formId);
+      if (selectedFolder) {
+        setFolders(prev => prev.map(folder =>
+          folder.id === selectedFolder
+            ? { ...folder, forms: folder.forms.filter(form => form.id !== formId) }
+            : folder
+        ));
+      } else {
+        setForms(prev => prev.filter(form => form.id !== formId));
+      }
+    }
+  }}
+  onCreate={() => setShowNewFormModal(true)}
+  navigate={navigate}
+  hasEditPermissions={hasEditPermissions()} // Pass the result here
+/>
       </main>
 
       {showNewFolderModal && (

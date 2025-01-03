@@ -433,3 +433,78 @@ export const getSharedForm = async (shareToken) => {
     throw new Error('Invalid or expired share link');
   }
 };
+// Add to services/api.js
+
+export const startFormResponse = async (formId) => {
+  const token = localStorage.getItem('token');
+  const response = await axios.post(
+    `${API_URL}/formsResponse/${formId}/responses/start`,
+    {},
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  return response.data;
+};
+
+export const updateFormResponse = async (responseId, data,formId) => {
+  const token = localStorage.getItem('token');
+  const response = await axios.put(
+    `${API_URL}/formsResponse/${formId}/responses/${responseId}`,
+   
+    data,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  return response.data;
+};
+
+export const trackFormView = async (formId) => {
+  const token = localStorage.getItem('token');
+  const response = await axios.post(
+    `${API_URL}/formsResponse/${formId}/view`,
+    {},
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  return response.data;
+};
+
+export const getFormAnalytics = async (formId) => {
+  const token = localStorage.getItem('token');
+  const response = await axios.get(
+    `${API_URL}/formsResponse/${formId}/analytics`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+  );
+  return response.data;
+};
+
+export const getFormResponses = async (formId, params = {}) => {
+  const token = localStorage.getItem('token');
+  const queryParams = new URLSearchParams(params);
+  
+  const response = await axios.get(
+    `${API_URL}/formsResponse/${formId}/responses?${queryParams}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+  );
+  return response.data;
+};

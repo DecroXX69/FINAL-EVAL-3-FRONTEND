@@ -1,174 +1,194 @@
 .elementWrapper {
-    margin: 12px 0;
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  .inputWrapper {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-    align-items: center;
-  }
-  
-  .input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 14px;
-    background: white;
-    transition: border-color 0.2s;
-  }
-  
-  .input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
-  }
-  
-  .submitButton {
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .submitButton:hover {
-    background: #1d4ed8;
-  }
-  
-  .submitIcon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .bubble {
-    background: white;
-    border-radius: 12px;
-    padding: 12px 16px;
-    margin: 4px 0;
-    max-width: 80%;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
-  
-  .imageBubble {
-    overflow: hidden;
-  }
-  
-  .bubbleImage {
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 8px;
-  }
-  
-  .ratingContainer {
-    display: flex;
-    gap: 4px;
-    background: white;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .ratingButton {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: none;
-    background: #f1f5f9;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-  }
-  
-  .ratingButton.active {
-    background: #2563eb;
-    color: white;
-  }
-  
-  .elementIcon {
-    margin-right: 8px;
-    display: inline-flex;
-    align-items: center;
-  }
-  
-  .error {
-    color: #ef4444;
-    padding: 8px;
-    border-radius: 6px;
-    background: #fee2e2;
-  }
-  .buttonWrapper {
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-  }
-  
-  .button {
-    padding: 8px 16px;
-    background-color: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s;
-  }
-  
-  .button:hover {
-    background-color: #1557b0;
-  }
-  
-  .button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .input[type="email"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .input[type="email"]:focus {
-    border-color: #1a73e8;
-    outline: none;
-  }
+  margin: 12px 0;
+  width: 100%;
+  max-width: 600px;
+}
 
-  .userResponseBubble {
-    background-color: #ff8c00;  /* Orange color */
-    color: white;
-    padding: 8px 16px;
-    border-radius: 16px;
-    max-width: 80%;
-    word-wrap: break-word;
-    margin-left: auto;  /* Pushes bubble to right side */
-    margin-right: 8px;
-    font-size: 14px;
-  }
-  
-  .elementWrapper {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-  }
-  
-  .inputWrapper {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 8px;
-  }
+.inputWrapper {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+}
+
+.submitButton {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+  background: #1d4ed8;
+}
+
+.submitIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.bubble {
+  background: white;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 4px 0;
+  max-width: 80%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.imageBubble {
+  overflow: hidden;
+}
+
+.bubbleImage {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.ratingContainer {
+  display: flex;
+  gap: 4px;
+  background: white;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.ratingButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.ratingButton.active {
+  background: #2563eb;
+  color: white;
+}
+
+.elementIcon {
+  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.error {
+  color: #ef4444;
+  padding: 8px;
+  border-radius: 6px;
+  background: #fee2e2;
+}
+.buttonWrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.button {
+  padding: 8px 16px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #1557b0;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.input[type="email"]:focus {
+  border-color: #1a73e8;
+  outline: none;
+}
+
+.userResponseBubble {
+  background-color: #ff8c00;  /* Orange color */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 16px;
+  max-width: 80%;
+  word-wrap: break-word;
+  margin-left: auto;  /* Pushes bubble to right side */
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.elementWrapper {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.button {
+  padding: 10px 24px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}

@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './FormElement.module.css';
 
-const FormElement = ({ 
-  element, 
-  response, 
-  onResponse, 
-  onSubmit, 
-  isSubmitted 
-}) => {
+const FormElement = ({ element, response, onResponse, onSubmit, isSubmitted }) => {
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^\+?[\d\s-]{10,}$/;
+    return phoneRegex.test(phone);
+  };
+
+  const validateInput = (value, type) => {
+    if (type === 'email-input' && value && !validateEmail(value)) {
+      return 'Please enter a valid email address';
+    } 
+    if (type === 'phone-input' && value && !validatePhone(value)) {
+      return 'Please enter a valid phone number';
+    }
+    return '';
+  };
+
   const handleSubmitClick = () => {
+    const error = validateInput(response, element.type);
+    if (error) {
+      alert(error);
+      return;
+    }
+    if (element.required && !response) {
+      alert('This field is required');
+      return;
+    }
     onSubmit(element._id);
   };
 
@@ -42,7 +65,6 @@ const FormElement = ({
   );
 
   const renderInput = () => {
-    // If response is submitted, show response bubble instead of input
     if (isSubmitted) {
       return renderResponseBubble();
     }
@@ -73,9 +95,9 @@ const FormElement = ({
       case 'image-bubble':
         return (
           <div className={`${styles.bubble} ${styles.imageBubble}`}>
-            {element.imageUrl && (
+            {element.value && (
               <img 
-                src={element.imageUrl} 
+                src={element.value} 
                 alt={element.label} 
                 className={styles.bubbleImage}
               />
@@ -97,7 +119,7 @@ const FormElement = ({
                   onClick={() => onResponse(element._id, rating)}
                   type="button"
                 >
-                  {element.icon || rating}
+                  {rating}
                 </button>
               ))}
             </div>
@@ -106,10 +128,11 @@ const FormElement = ({
         );
 
       case 'phone-input':
+      case 'email-input':
         return (
           <div className={styles.inputWrapper}>
             <input
-              type="tel"
+              type={element.type === 'phone-input' ? 'tel' : 'email'}
               className={styles.input}
               placeholder={element.label}
               value={response || ''}
@@ -134,60 +157,49 @@ const FormElement = ({
             {renderSubmitButton()}
           </div>
         );
-        case 'date-input':
-          return (
-            <div className={styles.inputWrapper}>
-              <input
-                type="date"
-                className={styles.input}
-                placeholder={element.label}
-                value={response || ''}
-                onChange={(e) => onResponse(element._id, e.target.value)}
-                required={element.required}
-              />
-              {renderSubmitButton()}
-            </div>
-          );
-  
-        case 'email-input':
-          return (
-            <div className={styles.inputWrapper}>
-              <input
-                type="email"
-                className={styles.input}
-                placeholder={element.label}
-                value={response || ''}
-                onChange={(e) => onResponse(element._id, e.target.value)}
-                required={element.required}
-              />
-              {renderSubmitButton()}
-            </div>
-          );
-  
-        case 'button':
-          return (
-            <div className={styles.buttonWrapper}>
-              <button
-                className={styles.button}
-                onClick={() => onResponse(element._id, element.value)}
-                type="button"
-              >
-                {element.value || element.label}
-              </button>
-            </div>
-          );
-  
-        default:
-          return <div className={styles.error}>Unsupported element type: {element.type}</div>;
-      }
-    };
-  
-    return (
-      <div className={styles.elementWrapper}>
-        {element.icon && <span className={styles.elementIcon}>{element.icon}</span>}
-        {renderInput()}
-      </div>
-    );
+
+      case 'date-input':
+        return (
+          <div className={styles.inputWrapper}>
+            <input
+              type="date"
+              className={styles.input}
+              placeholder={element.label}
+              value={response || ''}
+              onChange={(e) => onResponse(element._id, e.target.value)}
+              required={element.required}
+            />
+            {renderSubmitButton()}
+          </div>
+        );
+
+      case 'button-input':
+        return (
+          <div className={styles.buttonWrapper}>
+            <button
+              className={styles.button}
+              onClick={async () => {
+                await onResponse(element._id, 'completed');
+                await onSubmit(element._id);
+                alert('Form submitted successfully');
+              }}
+              type="button"
+            >
+              Submit
+            </button>
+          </div>
+        );
+
+      default:
+        return <div className={styles.error}>Unsupported element type: {element.type}</div>;
+    }
   };
-  
-  export default FormElement;
+
+  return (
+    <div className={styles.elementWrapper}>
+      {renderInput()}
+    </div>
+  );
+};
+
+export default FormElement;

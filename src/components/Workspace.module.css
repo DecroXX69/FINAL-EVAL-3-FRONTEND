@@ -18,6 +18,9 @@
     border: none;
     cursor: pointer;
     color: #666;
+    position: relative;
+    bottom: 54px;
+    left: 50px;
   }
   
   .blueButton {
@@ -47,17 +50,31 @@
     color: #ffffff;
   }
   
-  /* Header */
-  .header {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 24px;
-    background-color: #1a1a1a;
-    border-bottom: 1px solid #333;
-  }
+ /* Header */
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
   
+
+/* Workspace Button & Placement */
+.headerLeft {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+/* Theme Toggle & Share Placement */
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 65px;
+}
   /* Workspace Button & Dropdown */
   .workspaceButton {
     display: flex;
@@ -65,7 +82,7 @@
     gap: 8px;
     padding: 8px 12px;
     background: transparent;
-    border: none;
+    border: 1px solid #FFFFFF29;
     color: white;
     border-radius: 4px;
     cursor: pointer;
@@ -78,7 +95,7 @@
   .dropdown {
     position: absolute;
     top: 100%;
-    left: 24px;
+    
     width: 200px;
     background: #1a1a1a;
     border: 1px solid #333;
@@ -109,12 +126,15 @@
   .toggleButton {
     position: relative;
     width: 48px;
-    height: 24px;
+    height: 23px;
     background: #2563eb;
     border-radius: 12px;
     border: none;
     cursor: pointer;
     padding: 2px;
+    top: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
   }
   
   .toggleKnob {
@@ -146,6 +166,7 @@
   /* Main Content */
   .main {
     padding: 24px;
+    margin-left: 106px;
   }
   
   /* Folder Section */
@@ -162,7 +183,7 @@
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
-    background: transparent;
+    background: #FFFFFF14;
     border: 1px solid #333;
     border-radius: 4px;
     color: #fff;
@@ -182,7 +203,8 @@
   }
   
   .folder.selected {
-    background: #444;
+    background: white;
+    color: black;
     outline: 1px solid #666;
   }
   
@@ -234,8 +256,8 @@
   /* Delete Button */
   .deleteButton {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 1px;
+    right: 12px;
     background: none;
     border: none;
     color: #666;
@@ -264,11 +286,11 @@
   }
   
   .modal {
-    background: #1a1a1a;
+    background: #121212;
     border: 1px solid #333;
     border-radius: 8px;
     padding: 24px;
-    width: 100%;
+    width: 33%;
     max-width: 400px;
   }
   
@@ -278,7 +300,7 @@
   }
   
   .modalInput {
-    width: 100%;
+    width: 94%;
     padding: 8px 12px;
     background: #333;
     border: 1px solid #444;
@@ -288,30 +310,45 @@
   }
   
   .modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+    display: flex
+;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    margin-right: 82px;
+    gap: 49px;
   }
   
   .cancelButton,
-  .submitButton {
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-  }
+.submitButton {
+  background: none;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
   
-  .cancelButton {
-    background: transparent;
-    color: #fff;
-    border: 1px solid #333;
-  }
-  
-  .submitButton {
-    background: #2563eb;
-    color: #fff;
-    border: none;
-  }
+.cancelButton {
+  color: #888;
+}
+
+.submitButton {
+  color: #2563eb;
+}
+/* Divider */
+.modalActions::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: transparent;
+}
+
+.modalActions span {
+  width: 1px;
+  height: 20px;
+  background-color: #444;
+  margin: 0 12px;
+}
   
   /* Light Mode Overrides */
   .lightMode .header {
