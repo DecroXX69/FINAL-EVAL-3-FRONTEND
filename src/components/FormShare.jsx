@@ -30,13 +30,13 @@ const FormShare = () => {
         setFormData(response);
         
         const sortedElements = response.elements.sort((a, b) => a.order - b.order);
+        // Show first two elements regardless of type
         const initialElements = sortedElements.filter(element => 
           element.order === 0 || element.order === 1
         );
         
         setVisibleElements(initialElements);
 
-        // Track form view
         await trackFormView(response._id);
       } catch (err) {
         setError(err.message);
@@ -69,6 +69,7 @@ const FormShare = () => {
     const trackCompletion = async () => {
       if (!formData || !hasStarted.current || hasCompleted.current || !responseId) return;
 
+      // Count all elements that require responses
       const totalElements = formData.elements.filter(el => 
         !['text-bubble', 'image-bubble'].includes(el.type)
       ).length;
@@ -81,7 +82,7 @@ const FormShare = () => {
           await updateFormResponse(responseId, {
             responses,
             status: 'completed'
-          },formData._id);
+          }, formData._id);
         } catch (err) {
           console.error('Failed to track completion:', err);
         }
@@ -98,6 +99,7 @@ const FormShare = () => {
   };
 
   const handleSubmit = async (elementId) => {
+    // Handle button-input type separately
     if (formData.elements.find(el => el._id === elementId)?.type === 'button-input') {
       try {
         await updateFormResponse(responseId, {
@@ -113,6 +115,8 @@ const FormShare = () => {
       }
       return;
     }
+
+    // Handle other input types
     const value = tempResponses[elementId];
     if (value === undefined) return;
 
@@ -126,6 +130,7 @@ const FormShare = () => {
       return rest;
     });
 
+    // Update response in backend
     if (responseId) {
       try {
         await updateFormResponse(responseId, {
@@ -133,18 +138,20 @@ const FormShare = () => {
             ...responses,
             [elementId]: value
           }
-        },formData._id);
+        }, formData._id);
       } catch (err) {
         console.error('Failed to update response:', err);
       }
     }
 
+    // Show next elements
     const currentElement = formData.elements.find(el => el._id === elementId);
     if (!currentElement) return;
 
     const nextOrder = currentElement.order + 1;
     const nextElements = formData.elements.filter(el => el.order === nextOrder);
 
+    // Show next elements even if current element is an image
     if (nextElements.length > 0) {
       setTimeout(() => {
         setVisibleElements(prev => {
@@ -155,6 +162,27 @@ const FormShare = () => {
       }, 500);
     }
   };
+
+  // Auto-progress past non-input elements
+  useEffect(() => {
+    if (!formData || visibleElements.length === 0) return;
+
+    const lastElement = visibleElements[visibleElements.length - 1];
+    if (['text-bubble', 'image-bubble'].includes(lastElement.type)) {
+      const nextOrder = lastElement.order + 1;
+      const nextElements = formData.elements.filter(el => el.order === nextOrder);
+      
+      if (nextElements.length > 0) {
+        setTimeout(() => {
+          setVisibleElements(prev => {
+            const existingIds = new Set(prev.map(el => el._id));
+            const newElements = nextElements.filter(el => !existingIds.has(el._id));
+            return [...prev, ...newElements];
+          });
+        }, 1000); // Give time for the image to load
+      }
+    }
+  }, [visibleElements, formData]);
 
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
