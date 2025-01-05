@@ -29,6 +29,21 @@ const Modal = ({ title, value, onChange, onClose, onSubmit, placeholder }) => (
   </div>
 );
 
+const DeleteConfirmationModal = ({ type, onClose, onConfirm }) => (
+  <div className={styles.modalOverlay}>
+    <div className={styles.modal}>
+      <h2 className={styles.modalTitle}>
+        Are you sure you want to delete this {type}?
+      </h2>
+      <div className={styles.modalActions}>
+        <button onClick={onConfirm} className={styles.submitButton}>Confirm</button>
+        <span></span>
+        <button onClick={onClose} className={styles.cancelButton}>Cancel</button>
+      </div>
+    </div>
+  </div>
+);
+
 const FormbotGrid = ({ forms, onDelete, onCreate, navigate, hasEditPermissions }) => (
   <div className={styles.grid}>
     {hasEditPermissions && (
@@ -159,7 +174,9 @@ const Workspace = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [authChecked, setAuthChecked] = useState(false);
-  
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [deleteType, setDeleteType] = useState(''); // 'form' or 'folder'
+const [itemToDelete, setItemToDelete] = useState(null);
   // New effect to check auth status
   useEffect(() => {
     const checkAuth = async () => {
@@ -472,6 +489,28 @@ useEffect(() => {
       }
     }
   };
+
+  const handleDelete = async () => {
+    if (deleteType === 'form') {
+      await deleteFormbot(workspaceId, itemToDelete);
+      if (selectedFolder) {
+        setFolders(prev => prev.map(folder =>
+          folder.id === selectedFolder
+            ? { ...folder, forms: folder.forms.filter(form => form.id !== itemToDelete) }
+            : folder
+        ));
+      } else {
+        setForms(prev => prev.filter(form => form.id !== itemToDelete));
+      }
+    } else if (deleteType === 'folder') {
+      await deleteFolder(workspaceId, itemToDelete);
+      setFolders(prev => prev.filter(f => f.id !== itemToDelete));
+    }
+    setShowDeleteModal(false);
+    setItemToDelete(null);
+  };
+
+
   if (isLoading) {
     return <div className={styles.loading}>Loading workspace...</div>;
   }
@@ -571,11 +610,12 @@ useEffect(() => {
               <span className={styles.folderName}>{folder.name}</span>
               {hasEditPermissions() && (
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteFolder(workspaceId, folder.id);
-                    setFolders(prev => prev.filter(f => f.id !== folder.id));
-                  }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteType('folder');
+                  setItemToDelete(folder.id);
+                  setShowDeleteModal(true);
+                }}
                   className={styles.deleteButton}
                 >
                   <img src={Delete} alt="Delete Folder" className={styles.deleteIcon} />
@@ -589,16 +629,9 @@ useEffect(() => {
   forms={selectedFolder ? folders.find(f => f.id === selectedFolder)?.forms || [] : forms}
   onDelete={async (formId) => {
     if (hasEditPermissions()) {
-      await deleteFormbot(workspaceId, formId);
-      if (selectedFolder) {
-        setFolders(prev => prev.map(folder =>
-          folder.id === selectedFolder
-            ? { ...folder, forms: folder.forms.filter(form => form.id !== formId) }
-            : folder
-        ));
-      } else {
-        setForms(prev => prev.filter(form => form.id !== formId));
-      }
+      setDeleteType('form');
+      setItemToDelete(formId);
+      setShowDeleteModal(true);
     }
   }}
   onCreate={() => setShowNewFormModal(true)}
@@ -640,6 +673,16 @@ useEffect(() => {
         />
       )}
     
+    {showDeleteModal && (
+  <DeleteConfirmationModal
+    type={deleteType}
+    onClose={() => {
+      setShowDeleteModal(false);
+      setItemToDelete(null);
+    }}
+    onConfirm={handleDelete}
+  />
+)}
     </div>
   );
 };

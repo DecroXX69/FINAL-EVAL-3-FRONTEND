@@ -6,7 +6,7 @@
 }
 
 .container.dark {
-  background-color: #0f172a;
+  background-color: #18171c;
   color: #f8fafc;
 }
 
@@ -28,11 +28,11 @@
 }
 
 .statBox {
-  background-color: rgba(31, 41, 55, 0.5);
+  background-color: #323232;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   min-width: 120px;
-  text-align: center;
+  text-align: left;
 }
 
 .statLabel {
@@ -48,8 +48,6 @@
 }
 
 .tableContainer {
-  background-color: rgba(31, 41, 55, 0.3);
-  border-radius: 0.5rem;
   margin-bottom: 2rem;
   overflow-x: auto;
 }
@@ -61,11 +59,11 @@
 }
 
 .tableHeader {
-  background-color: rgba(31, 41, 55, 0.5);
   color: #94a3b8;
   font-weight: 500;
   text-align: left;
   padding: 0.75rem 1rem;
+  background: none;
 }
 
 .tableRow:hover {
@@ -79,15 +77,16 @@
 
 .completionContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding: 1rem;
+  padding: 2rem 0;
 }
 
 .donutChartContainer {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 300px;
+  height: 300px;
+  margin-bottom: 2rem;
 }
 
 .donutChart {
@@ -109,10 +108,9 @@
 
 .completionOverlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  top: 0;
+  right: -120px;
+  text-align: left;
 }
 
 .completedLabel {
@@ -128,9 +126,16 @@
 }
 
 .completionRate {
-  display: flex;
+  background-color: #323232;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  display: flex
+;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
+  left: 21em;
+  bottom: 14em;
 }
 
 .completionRateLabel {

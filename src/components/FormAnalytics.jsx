@@ -20,24 +20,41 @@ const FormAnalytics = ({ formId, isDarkMode }) => {
       try {
         const elementsResponse = await getFormElements(formId);
         
-        const elementMapping = {};
-        elementsResponse.forEach(element => {
-          if (
-            element &&
-            element._id &&
-            element.type !== 'text-bubble' &&
-            element.type !== 'image-bubble' &&
-            element.type !== 'video-bubble' &&
-            element.type !== 'gif-bubble'&&
-            element.type!=='button-input'
-          ) {
-            elementMapping[element._id] = {
-              label: element.label || `Question ${element.order + 1}`,
-              type: element.type,
-              order: element.order
-            };
-          }
-        });
+      // Create a counter for each type of input
+const typeCounters = {};
+
+const elementMapping = {};
+elementsResponse.forEach(element => {
+  if (
+    element &&
+    element._id &&
+    element.type !== 'text-bubble' &&
+    element.type !== 'image-bubble' &&
+    element.type !== 'video-bubble' &&
+    element.type !== 'gif-bubble' &&
+    element.type !== 'button-input'
+  ) {
+    // Get the base type name by removing '-input' suffix
+    const baseType = element.type.replace('-input', '');
+    
+    // Capitalize first letter
+    const capitalizedType = baseType.charAt(0).toUpperCase() + baseType.slice(1);
+    
+    // Increment counter for this type
+    typeCounters[baseType] = (typeCounters[baseType] || 0) + 1;
+    
+    // Create the display name with number if there are multiple of same type
+    const displayName = typeCounters[baseType] > 1 
+      ? `${capitalizedType} ${typeCounters[baseType]}`
+      : capitalizedType;
+
+    elementMapping[element._id] = {
+      label: element.label || displayName,
+      type: displayName,
+      order: element.order
+    };
+  }
+});
         
         setFormElements(elementMapping);
 

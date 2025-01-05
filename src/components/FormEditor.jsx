@@ -3,7 +3,7 @@ import { X, Trash2, Loader2 } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useParams } from 'react-router-dom';
 import styles from './FormEditor.module.css';
-
+import { useNavigate } from 'react-router-dom';
 import { 
   getFormElements, 
   addFormElements, 
@@ -24,7 +24,7 @@ import phoneInputImg from '../assets/call.png';
 import dateInputImg from '../assets/date.png';
 import ratingInputImg from '../assets/star.png';
 import buttonInputImg from '../assets/tick.png';
-
+import close from '../assets/close.png';
 const FormEditor = () => {
   
   const { formbotId } = useParams();
@@ -37,6 +37,7 @@ const FormEditor = () => {
   const [error, setError] = useState(null);
   const [shareUrl, setShareUrl] = useState('');
   const [showMessage, setShowMessage] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const loadFormElements = async () => {
       if (!formbotId) {
@@ -678,8 +679,8 @@ const FormEditor = () => {
           </button>
         
           {renderSaveButton()}
-          <button className={styles.closeButton}>
-            <X size={20} />
+          <button className={styles.closeButton} onClick={() => navigate('/workspace')}>
+            <img src ={close} alt="Close" />
           </button>
         </div>
       </header>
